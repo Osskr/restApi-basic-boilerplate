@@ -51,7 +51,7 @@ const usuariosPost = async (req, res=response) => {
 
     //debemos insertar el usuario en la base de datos en este caso mongo
     await usuario.save() //esperamos que agregue el usuario 
-    res.status(201).json({
+    res.status(400).json({
         usuario
     })
    
@@ -81,6 +81,7 @@ const usuariosPut = async (req, res=response) =>{
     })
 }
 
+
 const usuariosDelete = async (req, res=response) =>{
 
     const id = req.params.id
@@ -91,9 +92,13 @@ const usuariosDelete = async (req, res=response) =>{
    //Borrado logico (recomendado)
    //para cualquiera que este consumiendo el backend ese usuario estara eliminado, pero
    //se mantiene en nuestra base de datos para mantener la integridad referencial de la misma
+  
+   const uid = req.uid;
    const usuario = await Usuario.findByIdAndUpdate(id, {estado:false})
-    res.json({
+  
+   res.json({
          usuario
+        
     })
 }
 module.exports = {

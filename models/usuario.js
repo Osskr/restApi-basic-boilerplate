@@ -51,8 +51,8 @@ const UsuarioSchema = Schema({
 UsuarioSchema.methods.toJSON = function(){
     //extraigo la __v y el password por separado (despues extraigo los campos restantes en
     // ...usuario ). por ultimo solo retorno usuario sin los campos password y __V
-    const {__v, password, ...usuario} = this.toObject();
-
+    const {__v, password, _id, ...usuario} = this.toObject();
+    usuario.uid= _id
     return usuario;
 }
 

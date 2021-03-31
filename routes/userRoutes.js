@@ -6,10 +6,15 @@ const { usuariosGet,
 
 
 const router = Router()
-const {check, validationResult} = require('express-validator')
-const { validarCampos } = require('../middlewares/validar-campos')
-const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators')
+const {check} = require('express-validator')
 
+const {validarCampos,
+        validarJWT,
+        esAdminRole,
+        tieneRole} = require('../middlewares')
+
+
+const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators')
 //router.post('/route', [middlewares], controller)
 //router.post('/route',controller)
 
@@ -33,7 +38,13 @@ router.post('/',[
     check('rol').custom( esRoleValido),
     validarCampos],usuariosPost)
 
+
+    //para proteger una ruta debemos usar un middleware personalizado
+    //en este caso ValidarJWT
 router.delete('/:id',[
+    validarJWT,
+    //esAdminRole,
+    tieneRole('ADMIN_ROLE','VENTAS_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
     validarCampos

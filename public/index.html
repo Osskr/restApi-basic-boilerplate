@@ -4,13 +4,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="565527363487-ikloqc801oajtv1fbvth29p58so0254c.apps.googleusercontent.com">
     <title>Rest Server 2021 Node</title>
 </head>
 <body>  
-        <h1>Acceso Denegado</h1>
-        <video id="gif-mp4" poster="https://media2.giphy.com/media/xTdy8zSd3zN7XfawVO/200_s.gif" style="margin:0;padding:0" autoplay="" loop="" width="480" height="270">
-            <source src="https://media2.giphy.com/media/xTdy8zSd3zN7XfawVO/giphy.mp4" type="video/mp4; codecs=&quot;avc1.42E01E, mp4a.40.2&quot;">
-            <img src="https://media2.giphy.com/media/xTdy8zSd3zN7XfawVO/giphy.gif" title="Your browser does not support the mp4 video codec.">
-        </video>
+        <h1>Google sign in</h1>
+        <hr>
+
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+        <a href="#" onclick="signOut();">Sign out</a>
+        <script>
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+            console.log('User signed out.');
+            });
+        }
+        </script>
+
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+        <script>
+            
+           
+                    
+            function onSignIn(googleUser) {
+                var id_token = googleUser.getAuthResponse().id_token;
+                var profile = googleUser.getBasicProfile();
+                console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                console.log('Name: ' + profile.getName());
+                console.log('Image URL: ' + profile.getImageUrl());
+                console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+                
+               
+                var url = (window.location.hostname.includes('localhost'))
+                    ?'http://localhost:8080/api/auth/google'
+                    :'https://restapinode2021.herokuapp.com/api/auth/google'
+                const data = {id_token}
+                
+                //hacemos la peticion post
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    })
+                    .then(resp => resp.json())
+                    .then(data => console.log('Nuestro server dice',data))
+                    .catch(console.log)
+            }
+
+        </script>
+
 </body>
 </html>

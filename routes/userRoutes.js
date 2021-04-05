@@ -1,23 +1,25 @@
 const {Router} = require('express')
+const {check} = require('express-validator')
+
 const { usuariosGet,
         usuariosPost,
         usuariosPut,
         usuariosDelete  } = require('../controllers/userController')
 
 
-const router = Router()
-const {check} = require('express-validator')
-
 const {validarCampos,
-        validarJWT,
-        esAdminRole,
-        tieneRole} = require('../middlewares')
-
-
+       validarJWT,
+       esAdminRole,
+       tieneRole} = require('../middlewares')
+            
+       
 const { esRoleValido, emailExiste, existeUsuarioPorId } = require('../helpers/db-validators')
+
+const router = Router()
+
+
 //router.post('/route', [middlewares], controller)
 //router.post('/route',controller)
-
 router.get('/',usuariosGet)
 // :id es para los parametros de segmento
 router.put('/:id',[

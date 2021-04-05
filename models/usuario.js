@@ -57,6 +57,6 @@ UsuarioSchema.methods.toJSON = function(){
     return usuario;
 }
 
-//esto sirve para que funcion la valicion del campo unique del email
+//esto sirve para que funcion la validacion del campo unique del email
 UsuarioSchema.plugin(uniqueValidator, {message: '{PATH} debe ser unico'})
 module.exports = model('Usuario', UsuarioSchema); 

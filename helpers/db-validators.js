@@ -1,7 +1,6 @@
 // Contiene validadores para nuestros campos de bd
 
-const Role = require("../models/role")
-const Usuario = require('../models/usuario')
+const { Categoria,Producto, Role, Usuario } = require("../models")
 
 //rol
 
@@ -37,10 +36,28 @@ const existeUsuarioPorId = async (id) =>{
         throw new Error( `El usuario con el id: ${id} no existe`)
     }
 }
+
+const existeCategoria = async(id) =>{
+
+    const existeCategoria = await Categoria.findById(id)
+    if(!existeCategoria){
+        throw new Error(`La categoria: ${id} no existe`)
+    }
+}
+
+
+const existeProducto = async(id) => {
+    const existeProducto = await Producto.findById(id)
+    if(!existeProducto){
+        throw new Error(`El producto: ${id} no existe`)
+    }
+}
 module.exports = {
     esRoleValido,
     emailExiste,
-    existeUsuarioPorId
+    existeUsuarioPorId,
+    existeCategoria,
+    existeProducto
 }
 
 

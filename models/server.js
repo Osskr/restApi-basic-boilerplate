@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const { dbConnection } = require('../database/config.db')
 
 class Server {
@@ -13,7 +14,8 @@ class Server {
             buscar:'/api/buscar',
             categorias:'/api/categorias',
             productos:'/api/productos',
-            usuarios:'/api/usuarios'
+            usuarios:'/api/usuarios',
+            uploads:'/api/uploads'
         }
    
         //Conectar a la base de datos
@@ -31,20 +33,27 @@ class Server {
     }   
 
     middlewares(){
-        //Cors
-        // Posiblemente vamos a querer que ciertas paginas puedan acceder a nuestro API
-        //Cors nos sirve para ayudarnos a configurar esto, proteger nuestro servidor,
-        //Muchos navegadores nos van a dar error si nuestro cors no esta habilitado cross origin access error
-        this.app.use(cors())
-        
-        //Lectura y Parseo del Body leer los datos que vienen por post
-        this.app.use(express.json())
+      //Cors
+      // Posiblemente vamos a querer que ciertas paginas puedan acceder a nuestro API
+      //Cors nos sirve para ayudarnos a configurar esto, proteger nuestro servidor,
+      //Muchos navegadores nos van a dar error si nuestro cors no esta habilitado cross origin access error
+      this.app.use(cors());
 
-        //directorio publico
-        this.app.use(express.static('public'))
+      //Lectura y Parseo del Body leer los datos que vienen por post
+      this.app.use(express.json());
 
-        
-        
+      //directorio publico
+      this.app.use(express.static("public"));
+
+      // file upload , npm express-fileupload 
+      this.app.use(
+        fileUpload({
+          useTempFiles: true,
+          tempFileDir: "/tmp/",
+          createParentPath:true //esta opcion me permite crear el directorio padre si no existe
+                                //tener cuidado al usarla
+        })
+      );
     }
 
     routes() {
@@ -56,6 +65,7 @@ class Server {
         this.app.use(r.categorias, require('../routes/categoriasRoutes'))
         this.app.use(r.productos, require('../routes/productosRoutes'))
         this.app.use(r.buscar, require('../routes/buscarRoutes'))
+        this.app.use(r.uploads, require('../routes/uploadsRoutes'))
     
     }
 
